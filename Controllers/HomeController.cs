@@ -80,27 +80,30 @@ namespace Manifiesto.Controllers
 
                 impresion = archivo + adicional1 + adicional2;
 
-                linea = new string[total_registros, 16];
+                if(arraydbf[4].Substring(0,8) == barra) { 
 
-                linea[i, 0] = shipper_final;
-                linea[i, 1] = arraydbf[2];
-                linea[i, 2] = arraydbf[3]+"-"+ arraydbf[4];
-                linea[i, 3] = distr+prov+dep;
-                linea[i, 4] = arraydbf[25] + " " + arraydbf[27]+" "+ impresion;
-                linea[i, 5] = ""; //array de fechas fecha_inicial
-                linea[i, 6] = barra_total;
-                linea[i, 7] = arraydbf[16];
-                linea[i, 8] = arraydbf[16] + " " + arraydbf[15];
-                linea[i, 9] = "";
-                linea[i, 10] = chk_codigo + " " + arraydbf[10] + " " + zon_codigo + " " + marcas;
-                linea[i, 11] = arraydbf[21] + " " + arraydbf[11];
-                linea[i, 12] = cli_nrogui;
-                linea[i, 13] = descripcion;
-                linea[i, 14] = arraydbf[24];
-                linea[i, 15] = adicional1;
-                linea[i, 16] = marcas;
+                    linea = new string[total_registros, 17];
 
+                    linea[i, 0] = shipper_final;
+                    linea[i, 1] = arraydbf[2];
+                    linea[i, 2] = arraydbf[3]+"-"+ arraydbf[4];
+                    linea[i, 3] = distr+prov+dep;
+                    linea[i, 4] = arraydbf[25] + " " + arraydbf[27]+" "+ impresion;
+                    linea[i, 5] = ""; //array de fechas fecha_inicial
+                    linea[i, 6] = barra_total;
+                    linea[i, 7] = arraydbf[16];
+                    linea[i, 8] = arraydbf[16] + " " + arraydbf[15];
+                    linea[i, 9] = "";
+                    linea[i, 10] = chk_codigo + " " + arraydbf[10] + " " + zon_codigo + " " + marcas;
+                    linea[i, 11] = arraydbf[21] + " " + arraydbf[11];
+                    linea[i, 12] = cli_nrogui;
+                    linea[i, 13] = descripcion;
+                    linea[i, 14] = arraydbf[24];
+                    linea[i, 15] = adicional1;
+                    linea[i, 16] = marcas;
+                    linea[i, 17] = puerta;
 
+                }
 
 
 
