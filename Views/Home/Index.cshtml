@@ -1,0 +1,215 @@
+﻿@{
+    ViewBag.Title = "Contact";
+    Layout = null;
+}
+<img id='itf' />
+<a href="javascript:genPDF()">Download PDF</a>
+
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+
+<script type="text/javascript">
+
+
+    function genPDF() {
+
+        var doc = new jsPDF('P', 'mm', 'a4', true);
+
+
+
+        let total = 16;
+        let contador_hojas = 1;
+        let hojas_total = Math.ceil(total / 8);
+        let bloque = 1;
+        let x = 0;
+        let y = 0;
+
+        while (contador_hojas <= hojas_total) {
+
+            var img2 = new Image();
+            img2.src = '/images/MANIFIESTO_2019_FINAL_001.png';
+            doc.addImage(img2, 'png', 0, 0, 210, 297, '', 'FAST');
+
+            while (bloque <= 8) {
+
+                if (bloque == 1) { x = 0; y = 0; indice = contador_hojas - 1; }
+                if (bloque == 2) { x = 105; y = 0; indice = (contador_hojas - 1 + (bloque - 1) * hojas_total); }
+                if (bloque == 3) { x = 0; y = 74.2; indice = (contador_hojas - 1 + (bloque - 1) * hojas_total); }
+                if (bloque == 4) { x = 105; y = 74.2; indice = (contador_hojas - 1 + (bloque - 1) * hojas_total); }
+                if (bloque == 5) { x = 0; y = 148.5; indice = (contador_hojas - 1 + (bloque - 1) * hojas_total); }
+                if (bloque == 6) { x = 105; y = 148.5; indice = (contador_hojas - 1 + (bloque - 1) * hojas_total); }
+                if (bloque == 7) { x = 0; y = 222.7; indice = (contador_hojas - 1 + (bloque - 1) * hojas_total); }
+                if (bloque == 8) { x = 105; y = 222.6; indice = (contador_hojas - 1 + (bloque - 1) * hojas_total); }
+
+                if (indice < total) {
+
+                    doc.setFontSize(7);
+                    doc.setFont("courier");
+                    doc.setFontType("bold");
+                    doc.text(6.5 + x, 9 + y, 'CLI_SERIE CLI_CONTAD CLI_NROGUI');//CLI_SERIE CLI_CONTAD CLI_NROGUI
+
+                    doc.setFontSize(7);
+                    doc.setFont("helvetica");
+                    doc.setFontType("bold");
+                    doc.text(6.5 + x, 11 + y + y, 'CHK_CODIGO CLI_CODAGE  ZON_CODIGO  CLI_MARCAS');//CHK_CODIGO CLI_CODAGE  ZON_CODIGO  CLI_MARCAS
+
+                    doc.setFontSize(6.8);
+                    doc.setFont("helvetica");
+                    doc.setFontType("bold");
+                    doc.text(6.5 + x, 13 + y, 'CLI_CARGO CLI_NOMAGE');//CLI_CARGO CLI_NOMAGE
+                    doc.text(6.5 + x, 15 + y, 'shi_codigo 5004 - EQUIFAX PERU S.A');//shi_codigo 5004 - EQUIFAX PERU S.A
+
+                    doc.setFontSize(5.7);
+                    doc.setFont("helvetica");
+                    doc.setFontType("bold");
+                    doc.text(6.5 + x, 17 + y, 'CLI_NOMBRE');//CLI_NOMBRE
+
+                    doc.setFontSize(6);
+                    doc.setFont("helvetica");
+                    doc.text(6.5 + x, 19 + y, 'CLI_DIREC1-CLI_DIREC2');  //CLI_DIREC1-CLI_DIREC2
+
+                    doc.setFontSize(5);
+                    doc.setFont("helvetica");
+                    doc.setFontType("bold");
+                    doc.text(6.5 + x, 23 + y, 'CLI_DISTRI-CLI_PROVIN-CLI_DEPART'); //CLI_DISTRI-CLI_PROVIN-CLI_DEPART
+
+                    doc.setFontSize(5);
+                    doc.setFont("helvetica");
+
+                    var adicional = 'CLI_PRDSHI CLI_GUIREM ARCHIVOADICIONAL1ADICIONAL2';  //CLI_PRDSHI CLI_GUIREM ARCHIVOADICIONAL1ADICIONAL2
+
+                    if (adicional.toLowerCase().indexOf('con sello') !== -1) {
+
+                        var resultado = adicional.toUpperCase().replace("con sello", "");
+                        doc.text(6.5 + x, 24.5 + y, resultado);
+                        doc.setFontSize(6);
+                        doc.setFont("helvetica");
+                        doc.setFontType("bold");
+                        doc.text(80 + x, 64 + y, 'CON SELLO');
+                        doc.setFont("helvetica");
+                    }
+                    else if (adicional.toLowerCase().indexOf('insertoa insertob') !== -1) {
+
+                        var resultado = adicional.toUpperCase();
+                        doc.text(6.5 + x, 24.5 + y, resultado);
+                        doc.setFontSize(6);
+                        doc.setFont("helvetica");
+                        doc.setFontType("bold");
+                        doc.text(80 + x, 64 + y, 'AS');
+                        doc.setFont("helvetica");
+
+                    }
+                    else if (adicional.toLowerCase().indexOf('insertob insertoa') !== -1) {
+
+                        var resultado = adicional.toUpperCase();
+                        doc.text(6.5 + x, 24.5 + y, resultado);
+                        doc.setFontSize(6);
+                        doc.setFont("helvetica");
+                        doc.setFontType("bold");
+                        doc.text(80 + x, 64 + y, 'SA');
+                        doc.setFont("helvetica");
+
+                    }
+                    else if (adicional.toLowerCase().indexOf('insertoa') !== -1) {
+
+                        var resultado = adicional.toUpperCase();
+                        doc.text(6.5 + x, 24.5 + y, resultado);
+                        doc.setFontSize(6);
+                        doc.setFont("helvetica");
+                        doc.setFontType("bold");
+                        doc.text(80 + x, 64 + y, 'A');
+                        doc.setFont("helvetica");
+
+                    }
+                    else if (adicional.toLowerCase().indexOf('insertob') !== -1) {
+
+                        var resultado = adicional.toUpperCase();
+                        doc.text(6.5 + x, 24.5 + y, resultado);
+                        doc.setFontSize(6);
+                        doc.setFont("helvetica");
+                        doc.setFontType("bold");
+                        doc.text(80 + x, 64 + y, 'S');
+                        doc.setFont("helvetica");
+
+                    }
+                    else {
+                        doc.text(6.5 + x, 24.5 + y, adicional);
+                    }
+
+                    doc.setFontSize(4);
+
+                    let fvencimineto = ('30/07/2020'.substr(3, 2) + '30/07/2020'.substr(0, 2) + '30/07/2020'.substr(0, 2) + '30/07/2020'.substr(3, 2)).replace("/", "");
+
+                    doc.text(78 + x, 21 + y, fvencimineto);
+
+
+                    doc.setFontSize(11);
+                    doc.text(85 + x, 21 + y, 'chk_codigo CLI_CODAGE	zon_codigo	CLI_MARCAS'.substr(3, 5));//chk_codigo CLI_CODAGE	zon_codigo	CLI_MARCAS
+
+                    //cli_marcas
+                    let marcas = 'V01';//16
+                    if (['V01', 'V02', 'V03', 'V04', 'V05', 'V06', 'V07', 'V08', 'V09', 'V10'].includes(marcas))
+
+                        doc.setFontSize(8);
+                    doc.text(8.3 + x, 37.6 + y, 'X');
+                    doc.text(29.5 + x, 31.5 + y, 'X');
+
+                }
+
+
+                doc.setFontSize(5);
+                doc.setFont("helvetica");
+                doc.text(11.6 + x, 30 + y, '01/07/2020'.substr(0, 2));//fecha1
+                doc.text(11.6 + x, 32.7 + y, '01/07/2020'.substr(3, 2));//fecha1
+                doc.text(11.6 + x, 36 + y, '02/07/2020'.substr(0, 2));//fecha2
+                doc.text(11.6 + x, 38.5 + y, '02/07/2020'.substr(3, 2));//fecha2
+                doc.text(11.6 + x, 41.5 + y, '03/07/2020'.substr(0, 2));//fecha3
+                doc.text(11.6 + x, 44.1 + y, '03/07/2020'.substr(3, 2));//fecha3
+                doc.text(11.6 + x, 47 + y, '04/07/2020'.substr(0, 2));//fecha4
+                doc.text(11.6 + x, 49.7 + y, '04/07/2020'.substr(3, 2));//fecha4
+                doc.text(11.6 + x, 52.5 + y, '05/07/2020'.substr(0, 2));//fecha5
+                doc.text(11.6 + x, 55.3 + y, '05/07/2020'.substr(3, 2));//fecha5
+                doc.text(11.6 + x, 58.4 + y, '06/07/2020'.substr(0, 2));//fecha5
+                doc.text(11.6 + x, 61.2 + y, '06/07/2020'.substr(3, 2));//fecha5
+
+
+                //En el caso de que el servicio sea habitat
+                let habitat = 'VL8513121723851312000001'.substr(0, 2);//cod_barra.substr(0,2));
+
+                if (habitat == 'VL') {
+
+                    doc.text(85 + x, 65 + y, 'CLI_NRODOC'); //CLI_NRODOC 17
+
+                }
+
+                doc.text(83 + x, 39.5 + y, 'CLI_SERIE'); //CLI_serie 7
+
+                let puerta = 'SI'; //BAJOPUERTA
+                if (puerta == "SI") {
+
+                    doc.setFontSize(6);
+                    doc.setFont("helvetica");
+                    doc.text(20 + x, 59 + y, 'NO BAJO PUERTA');
+                }
+
+
+                JsBarcode("#itf", "C58513121723851312000001", {
+                    format: "CODE128", width: 4,
+                    height: 40
+                });//barra
+
+                const img = document.querySelector('img#itf');
+                doc.addImage(img.src, 'JPEG', 41.5 + x, 6 + y, 55, 7);
+                doc.addImage(img.src, 'JPEG', 8 + x, 63 + y, 55, 7);
+                bloque++;
+            }
+            bloque = 1;
+            contador_hojas++;
+            doc.addPage();
+
+        }
+
+        doc.save('Test.pdf');
+
+    }
+</script>
