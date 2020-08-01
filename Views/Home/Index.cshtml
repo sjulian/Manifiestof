@@ -11,13 +11,33 @@
 <script type="text/javascript">
 
 
-    function genPDF() {
+
+    readTextFile("http://192.168.100.12:8887/data.json", function (text) {
+
+        var data = JSON.parse(text);
+        genPDF(data);
+
+    });
+
+    function readTextFile(file, callback) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.overrideMimeType("application/json");
+        rawFile.open("GET", file, true);
+        rawFile.onreadystatechange = function () {
+            if (rawFile.readyState === 4 && rawFile.status == "200") {
+                callback(rawFile.responseText);
+            }
+        }
+        rawFile.send(null);
+    }
+
+    function genPDF(data) {
 
         var doc = new jsPDF('P', 'mm', 'a4', true);
 
 
 
-        let total = 16;
+        let total = data.length;
         let contador_hojas = 1;
         let hojas_total = Math.ceil(total / 8);
         let bloque = 1;
@@ -27,7 +47,7 @@
         while (contador_hojas <= hojas_total) {
 
             var img2 = new Image();
-            img2.src = '/images/MANIFIESTO_2019_FINAL_001.png';
+            img2.src = 'MANIFIESTO_2019_FINAL_001.png'
             doc.addImage(img2, 'png', 0, 0, 210, 297, '', 'FAST');
 
             while (bloque <= 8) {
@@ -46,37 +66,42 @@
                     doc.setFontSize(7);
                     doc.setFont("courier");
                     doc.setFontType("bold");
-                    doc.text(6.5 + x, 9 + y, 'CLI_SERIE CLI_CONTAD CLI_NROGUI');//CLI_SERIE CLI_CONTAD CLI_NROGUI
+                    doc.text(6.5 + x, 9 + y, data[indice][8] + " " + data[indice][12]);//CLI_SERIE CLI_CONTAD CLI_NROGUI
 
                     doc.setFontSize(7);
                     doc.setFont("helvetica");
                     doc.setFontType("bold");
-                    doc.text(6.5 + x, 11 + y + y, 'CHK_CODIGO CLI_CODAGE  ZON_CODIGO  CLI_MARCAS');//CHK_CODIGO CLI_CODAGE  ZON_CODIGO  CLI_MARCAS
+                    doc.text(6.5 + x, 11 + y, data[indice][10]);//CHK_CODIGO CLI_CODAGE  ZON_CODIGO  CLI_MARCAS
 
                     doc.setFontSize(6.8);
                     doc.setFont("helvetica");
                     doc.setFontType("bold");
-                    doc.text(6.5 + x, 13 + y, 'CLI_CARGO CLI_NOMAGE');//CLI_CARGO CLI_NOMAGE
-                    doc.text(6.5 + x, 15 + y, 'shi_codigo 5004 - EQUIFAX PERU S.A');//shi_codigo 5004 - EQUIFAX PERU S.A
+                    doc.text(6.5 + x, 13 + y, data[indice][11].trim().substr(0, 27));//CLI_CARGO CLI_NOMAGE
+                    doc.text(6.5 + x, 15 + y, data[indice][0].substr(0, 30));//shi_codigo 5004 - EQUIFAX PERU S.A
 
                     doc.setFontSize(5.7);
                     doc.setFont("helvetica");
                     doc.setFontType("bold");
-                    doc.text(6.5 + x, 17 + y, 'CLI_NOMBRE');//CLI_NOMBRE
+                    doc.text(6.5 + x, 17 + y, data[indice][1].substr(0, 65));//CLI_NOMBRE
 
                     doc.setFontSize(6);
                     doc.setFont("helvetica");
-                    doc.text(6.5 + x, 19 + y, 'CLI_DIREC1-CLI_DIREC2');  //CLI_DIREC1-CLI_DIREC2
+                    doc.text(6.5 + x, 19 + y, data[indice][2].substr(0, 67));  //CLI_DIREC1-CLI_DIREC2
 
                     doc.setFontSize(5);
                     doc.setFont("helvetica");
                     doc.setFontType("bold");
-                    doc.text(6.5 + x, 23 + y, 'CLI_DISTRI-CLI_PROVIN-CLI_DEPART'); //CLI_DISTRI-CLI_PROVIN-CLI_DEPART
+                    doc.text(6.5 + x, 23 + y, data[indice][3]); //CLI_DISTRI-CLI_PROVIN-CLI_DEPART
+
+                    doc.setFontSize(3);
+                    doc.setFont("helvetica");
+                    doc.setFontType("bold");
+                    doc.text(40 + x, 27 + y, data[indice][13].substr(0, 70));
 
                     doc.setFontSize(5);
                     doc.setFont("helvetica");
 
-                    var adicional = 'CLI_PRDSHI CLI_GUIREM ARCHIVOADICIONAL1ADICIONAL2';  //CLI_PRDSHI CLI_GUIREM ARCHIVOADICIONAL1ADICIONAL2
+                    var adicional = data[indice][4].toLowerCase();  //CLI_PRDSHI CLI_GUIREM ARCHIVOADICIONAL1ADICIONAL2
 
                     if (adicional.toLowerCase().indexOf('con sello') !== -1) {
 
@@ -133,74 +158,73 @@
 
                     }
                     else {
-                        doc.text(6.5 + x, 24.5 + y, adicional);
+                        doc.text(6.5 + x, 24.5 + y, adicional.substr(0, 87));
                     }
 
                     doc.setFontSize(4);
 
-                    let fvencimineto = ('30/07/2020'.substr(3, 2) + '30/07/2020'.substr(0, 2) + '30/07/2020'.substr(0, 2) + '30/07/2020'.substr(3, 2)).replace("/", "");
+                    let fvencimineto = (data[indice][5][5].substr(3, 2) + data[indice][5][5].substr(0, 2) + data[indice][5][0].substr(0, 2) + data[indice][5][0].substr(3, 2)).replace("/", "");
 
-                    doc.text(78 + x, 21 + y, fvencimineto);
+                    doc.text(78 + x, 23 + y, fvencimineto);
 
 
                     doc.setFontSize(11);
-                    doc.text(85 + x, 21 + y, 'chk_codigo CLI_CODAGE	zon_codigo	CLI_MARCAS'.substr(3, 5));//chk_codigo CLI_CODAGE	zon_codigo	CLI_MARCAS
+                    doc.text(85 + x, 23 + y, data[indice][10].substr(3, 5));//chk_codigo CLI_CODAGE	zon_codigo	CLI_MARCAS
 
                     //cli_marcas
-                    let marcas = 'V01';//16
-                    if (['V01', 'V02', 'V03', 'V04', 'V05', 'V06', 'V07', 'V08', 'V09', 'V10'].includes(marcas))
+                    let marcas = data[indice][16];//16
+                    if (['V01', 'V02', 'V03', 'V04', 'V05', 'V06', 'V07', 'V08', 'V09', 'V10'].includes(marcas)) {
 
                         doc.setFontSize(8);
-                    doc.text(8.3 + x, 37.6 + y, 'X');
-                    doc.text(29.5 + x, 31.5 + y, 'X');
+                        doc.text(8.3 + x, 37.6 + y, 'X');
+                        doc.text(29.5 + x, 31.5 + y, 'X');
 
-                }
-
-
-                doc.setFontSize(5);
-                doc.setFont("helvetica");
-                doc.text(11.6 + x, 30 + y, '01/07/2020'.substr(0, 2));//fecha1
-                doc.text(11.6 + x, 32.7 + y, '01/07/2020'.substr(3, 2));//fecha1
-                doc.text(11.6 + x, 36 + y, '02/07/2020'.substr(0, 2));//fecha2
-                doc.text(11.6 + x, 38.5 + y, '02/07/2020'.substr(3, 2));//fecha2
-                doc.text(11.6 + x, 41.5 + y, '03/07/2020'.substr(0, 2));//fecha3
-                doc.text(11.6 + x, 44.1 + y, '03/07/2020'.substr(3, 2));//fecha3
-                doc.text(11.6 + x, 47 + y, '04/07/2020'.substr(0, 2));//fecha4
-                doc.text(11.6 + x, 49.7 + y, '04/07/2020'.substr(3, 2));//fecha4
-                doc.text(11.6 + x, 52.5 + y, '05/07/2020'.substr(0, 2));//fecha5
-                doc.text(11.6 + x, 55.3 + y, '05/07/2020'.substr(3, 2));//fecha5
-                doc.text(11.6 + x, 58.4 + y, '06/07/2020'.substr(0, 2));//fecha5
-                doc.text(11.6 + x, 61.2 + y, '06/07/2020'.substr(3, 2));//fecha5
+                    }
 
 
-                //En el caso de que el servicio sea habitat
-                let habitat = 'VL8513121723851312000001'.substr(0, 2);//cod_barra.substr(0,2));
-
-                if (habitat == 'VL') {
-
-                    doc.text(85 + x, 65 + y, 'CLI_NRODOC'); //CLI_NRODOC 17
-
-                }
-
-                doc.text(83 + x, 39.5 + y, 'CLI_SERIE'); //CLI_serie 7
-
-                let puerta = 'SI'; //BAJOPUERTA
-                if (puerta == "SI") {
-
-                    doc.setFontSize(6);
+                    doc.setFontSize(5);
                     doc.setFont("helvetica");
-                    doc.text(20 + x, 59 + y, 'NO BAJO PUERTA');
+                    doc.text(11.6 + x, 30 + y, data[indice][5][0].substr(0, 2));//fecha1
+                    doc.text(11.6 + x, 32.7 + y, data[indice][5][0].substr(3, 2));//fecha1
+                    doc.text(11.6 + x, 36 + y, data[indice][5][1].substr(0, 2));//fecha2
+                    doc.text(11.6 + x, 38.5 + y, data[indice][5][1].substr(3, 2));//fecha2
+                    doc.text(11.6 + x, 41.5 + y, data[indice][5][2].substr(0, 2));//fecha3
+                    doc.text(11.6 + x, 44.1 + y, data[indice][5][2].substr(3, 2));//fecha3
+                    doc.text(11.6 + x, 47 + y, data[indice][5][3].substr(0, 2));//fecha4
+                    doc.text(11.6 + x, 49.7 + y, data[indice][5][3].substr(3, 2));//fecha4
+                    doc.text(11.6 + x, 52.5 + y, data[indice][5][4].substr(0, 2));//fecha5
+                    doc.text(11.6 + x, 55.3 + y, data[indice][5][4].substr(3, 2));//fecha5
+                    doc.text(11.6 + x, 58.4 + y, data[indice][5][5].substr(0, 2));//fecha5
+                    doc.text(11.6 + x, 61.2 + y, data[indice][5][5].substr(3, 2));//fecha5
+
+
+                    //En el caso de que el servicio sea habitat
+                    let habitat = data[0][6].substr(0, 2);//cod_barra.substr(0,2));
+
+                    if (habitat == 'VL') {
+
+                        doc.text(85 + x, 65 + y, data[indice][15]); //CLI_NRODOC 15
+
+                    }
+
+                    doc.text(83 + x, 39.5 + y, data[indice][7]); //CLI_serie 7
+
+                    let puerta = data[indice][17]; //BAJOPUERTA
+
+                    if (puerta == "SI") {
+
+                        doc.setFontSize(6);
+                        doc.setFont("helvetica");
+                        doc.text(20 + x, 59 + y, 'NO BAJO PUERTA');
+                    }
+
+
+                    JsBarcode("#itf", data[indice][6], { format: "CODE128", width: 4, height: 40 });//barra
+
+                    const img = document.querySelector('img#itf');
+                    doc.addImage(img.src, 'JPEG', 41.5 + x, 6 + y, 55, 7);
+                    doc.addImage(img.src, 'JPEG', 8 + x, 63 + y, 55, 7);
                 }
-
-
-                JsBarcode("#itf", "C58513121723851312000001", {
-                    format: "CODE128", width: 4,
-                    height: 40
-                });//barra
-
-                const img = document.querySelector('img#itf');
-                doc.addImage(img.src, 'JPEG', 41.5 + x, 6 + y, 55, 7);
-                doc.addImage(img.src, 'JPEG', 8 + x, 63 + y, 55, 7);
                 bloque++;
             }
             bloque = 1;
